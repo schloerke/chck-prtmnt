@@ -39,13 +39,19 @@ jobs:
         with:
           run: python chck.py
 
-      - name: Send notification
-        if: failure()
-        uses: cinotify/github-action@main
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
         with:
-          to: "${{ secrets.EMAIL }}"
-          subject: "Apartments found!"
-          body: "https://www.addisonatswiftcreek.com/floorplans/wellesley-with-fenced-in-yard"
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{secrets.EMAIL_USERNAME}}
+          password: ${{secrets.EMAIL_PASSWORD}}
+          subject: Apartment found!
+          to: ${{secrets.EMAIL_RECIPIENT}}
+          from: Barret Schloerke
+          body: |
+            https://www.addisonatswiftcreek.com/floorplans/wellesley-with-fenced-in-yard
 
       - name: Upload artifacts
         if: always()
