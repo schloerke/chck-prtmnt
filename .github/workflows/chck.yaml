@@ -23,6 +23,13 @@ jobs:
         uses: coactions/setup-xvfb@v1
         with:
           run: python chck.py
+      - name: Send notification
+        if: failure()
+        uses: cinotify/github-action@main
+        with:
+          to: "${{ secrets.EMAIL }}"
+          subject: "Apartments found!"
+          body: "https://www.addisonatswiftcreek.com/floorplans/wellesley-with-fenced-in-yard"
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v2
