@@ -3,7 +3,9 @@ from playwright.sync_api import sync_playwright, expect
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=False)
     page = browser.new_page()
-    page.goto("https://www.addisonatswiftcreek.com/floorplans/wellesley")
+    page.goto(
+        "https://www.addisonatswiftcreek.com/floorplans/wellesley-with-fenced-in-yard"
+    )
 
     try:
         expect(page.locator("#challenge-running")).to_have_count(
