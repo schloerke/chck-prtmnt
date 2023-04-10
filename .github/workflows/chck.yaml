@@ -21,4 +21,4 @@ jobs:
       - name: Install browsers
         run: playwright install --with-deps
       - name: Run Playwright tests
-        run: pytest chck.py
+        run: pytest chck.py --headed

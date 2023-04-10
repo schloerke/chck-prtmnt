@@ -11,8 +11,10 @@ def test_output_ui_kitchen(page: Page) -> None:
     except AssertionError:
         try:
             page.frame_locator("iframe").locator(".mark").click(timeout=10000)
-        except TimeoutError:
-            page.screenshot(path="shivon.png")
+        except TimeoutError as e:
+            page.screenshot(path="debug-init.png")
+            raise e
+            return
 
     expect(page.locator("#challenge-running")).to_have_count(0)
 
@@ -23,7 +25,8 @@ def test_output_ui_kitchen(page: Page) -> None:
         expect(avail_container.locator("#no-matches-container")).to_have_count(0)
     except AssertionError:
         print("No matches found")
-        page.screenshot(path="shivon-pass.png")
+        page.screenshot(path="debug-no-match.png")
         return
 
+    page.screenshot(path="debug-match.png")
     raise RuntimeError("Match found! Send text message!")
