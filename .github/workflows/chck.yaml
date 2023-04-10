@@ -32,6 +32,7 @@ jobs:
           key: ubuntu-playwright-1.32.1
 
       - name: Install browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: playwright install --with-deps
 
       - name: Run Playwright tests
