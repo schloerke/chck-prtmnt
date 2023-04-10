@@ -1,5 +1,7 @@
 name: chck prtmnt
 on:
+  # schedule:
+  #   - cron: "*/5 * * * *"
   push:
     branches: main
   pull_request:
@@ -9,20 +11,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
+
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
+
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Cache playwright binaries
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          # Match playwright version
+          key: ubuntu-playwright-1.32.1
+
       - name: Install browsers
         run: playwright install --with-deps
+
       - name: Run Playwright tests
         uses: coactions/setup-xvfb@v1
         with:
           run: python chck.py
+
       - name: Send notification
         if: failure()
         uses: cinotify/github-action@main
@@ -30,6 +46,7 @@ jobs:
           to: "${{ secrets.EMAIL }}"
           subject: "Apartments found!"
           body: "https://www.addisonatswiftcreek.com/floorplans/wellesley-with-fenced-in-yard"
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v2
