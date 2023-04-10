@@ -21,4 +21,10 @@ jobs:
       - name: Install browsers
         run: playwright install --with-deps
       - name: Run Playwright tests
-        run: pytest chck.py --headed
+        run: pytest chck.py
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 1
