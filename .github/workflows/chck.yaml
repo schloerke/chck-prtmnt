@@ -61,6 +61,12 @@ jobs:
           body: |
             https://www.addisonatswiftcreek.com/floorplans/wellesley-with-fenced-in-yard
 
+      - name: Make noise!
+        if: steps.chck.outputs.found == 'true'
+        run: |
+          echo "Apartment found! Yell!"
+          exit 1
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v2
