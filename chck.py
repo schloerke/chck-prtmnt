@@ -1,4 +1,7 @@
+import os
 from playwright.sync_api import sync_playwright, expect
+
+output_file = os.getenv("GITHUB_OUTPUT")
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=False)
@@ -28,8 +31,15 @@ with sync_playwright() as p:
         expect(avail_container.locator("#no-matches-container")).to_have_count(
             0, timeout=1000
         )
+        print("Match found! Send message!")
         page.screenshot(path="debug-match.png")
-        raise RuntimeError("Match found! Send text message!")
+        if output_file is not None:
+            with open(output_file, "a") as ghfile:
+                ghfile.write("found=true")
+
     except AssertionError:
         print("No matches found")
         page.screenshot(path="debug-no-match.png")
+        if output_file is not None:
+            with open(output_file, "a") as ghfile:
+                ghfile.write("found=false")

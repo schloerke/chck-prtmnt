@@ -36,12 +36,18 @@ jobs:
         run: playwright install --with-deps
 
       - name: Run Playwright tests
+        id: chck
         uses: coactions/setup-xvfb@v1
         with:
           run: python chck.py
 
+      - name: Debug output
+        shell: bash
+        run: |
+          echo "found: '${{steps.chck.outputs.found}}'"
+
       - name: Send mail
-        if: failure()
+        if: steps.chck.outputs.found == 'true'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
